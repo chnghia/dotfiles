@@ -109,3 +109,12 @@ source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+export LESSOPEN="| $HOMEBREW_PREFIX/opt/source-highlight/bin/src-hilite-lesspipe.sh %s"
+export LESS=' -R '
+
+# Local config
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+# aliases
+[[ -f ~/.aliases ]] && source ~/.aliases
