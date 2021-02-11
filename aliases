@@ -1,4 +1,25 @@
 alias lla='ls -al'
 alias speedtest-sing='speedtest --server 13623'
 alias speedtest-sing-1='speedtest --server 4235'
-alias sshuttle-vpn-gw='sshuttle -r vfa-vpn-gw 0/0 -x=192.168.101.0/24 -x=192.168.100.0/24'
+alias sshuttle-vpn-gw='sshuttle -r vfa-vpn-gw 0/0 -x=192.168.101.0/24 -x=192.168.100.0/24 -x=192.168.1.0/24'
+alias rmd='rm -rf'
+hledger_tree() {
+  if [ "$1" != "" ]
+  then
+    hledger balance -M date:$1- --tree --depth 2
+  else
+    DATE=$(date +%Y)
+    hledger balance -M date:$DATE/01- --tree --depth 2
+  fi
+}
+hledger_tree_w() {
+  if [ "$1" != "" ]
+  then
+    hledger balance -W date:$1- --tree --depth 2
+  else
+    DATE=$(date +%Y/%m)
+    hledger balance -W date:$DATE/01- --tree --depth 2
+  fi
+}
+alias hledger-tree='hledger_tree'
+alias hledger-tree-w='hledger_tree_w'
