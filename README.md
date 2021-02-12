@@ -15,6 +15,12 @@ Some stuff when I do with Apple M1 until Feb 8
 | nodejs(v15)  |        |          |                                   |
 | flutter      |        |          | (beta channel still remains bugs) |
 | vscode       |        |          | (insiders channel)                |
+| hledger      |        |          |                                   |
+| sublime text |        |          |                                   |
+| figma        |        |          |                                   |
+| sshuttle     |        |          |                                   |
+| nvm          |        |          |                                   |
+| node-v15     |        |          |                                   |
 
 ## fonts
 
