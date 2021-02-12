@@ -17,6 +17,57 @@ success() {
     echo -e "${COLOR_GREEN}$1${COLOR_NONE}"
 }
 
+setup_homebrew() {
+    title "Setting up Homebrew"
+
+    if test ! "$(command -v brew)"; then
+        info "Homebrew not installed. Installing."
+        # Run as a login shell (non-interactive) so that the script doesn't pause for user input
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash --login
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash --login
+
+    fi
+
+    # install brew dependencies from Brewfile
+    brew bundle
+
+    # install fzf
+    echo -e
+    info "Installing fzf"
+    "$(brew --prefix)"/opt/fzf/install --key-bindings --completion --no-update-rc --no-bash --no-fish
+}
+
+setup_macos() {
+    title "Configuring macOS"
+    if [[ "$(uname)" == "Darwin" ]]; then
+        echo "show the ~/Library folder in Finder"
+        chflags nohidden ~/Library
+
+        echo "Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)"
+        defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+
+        echo "Enable subpixel font rendering on non-Apple LCDs"
+        defaults write NSGlobalDomain AppleFontSmoothing -int 2
+
+        echo "Use current directory as default search scope in Finder"
+        defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+        echo "Disable press-and-hold for keys in favor of key repeat"
+        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+        echo "Set a blazingly fast keyboard repeat rate"
+        defaults write NSGlobalDomain KeyRepeat -int 1
+
+        echo "Set a shorter Delay until key repeat"
+        defaults write NSGlobalDomain InitialKeyRepeat -int 15
+
+        echo "Enable tap to click (Trackpad)"
+        defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+    else
+        warning "macOS not detected. Skipping."
+    fi
+}
+
 setup_symlinks() {
   title "Creating symlinks"
   cd $HOME
