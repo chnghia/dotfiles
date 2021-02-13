@@ -77,13 +77,24 @@ setup_symlinks() {
   ln -s .dotfiles/SpaceVim .SpaceVim
   ln -s .dotfiles/SpaceVim .vim
   ln -s .dotfiles/ohmyzsh .oh-my-zsh
-  ln -s .dotfiles/zprofile .zprofile
+  if [[ "$(uname -m)" == "x86_64" ]]; then
+    ln -s .dotfiles/zprofile-x86_64 .zprofile
+  else
+    ln -s .dotfiles/zprofile .zprofile
+  fi
   ln -s .dotfiles/zshrc .zshrc
   ln -s .dotfiles/zshrc.local .zshrc.local
 
+  # some more links
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+  git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+  git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+  ln -s .dotfiles/bin bin
+  ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
 }
 
-setup_symlinks
+# setup_symlinks
+setup_macos
 
 echo -e
 success "Done."
