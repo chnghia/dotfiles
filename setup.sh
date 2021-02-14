@@ -24,8 +24,6 @@ setup_homebrew() {
         info "Homebrew not installed. Installing."
         # Run as a login shell (non-interactive) so that the script doesn't pause for user input
         curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash --login
-        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash --login
-
     fi
 
     # install brew dependencies from Brewfile
