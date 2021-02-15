@@ -39,3 +39,8 @@ copied from: https://github.com/dracula/iterm.git
 ### terminal
 
 copied from: https://github.com/dracula/terminal-app.git
+
+## Credits
+
+- inspired by https://github.com/nicknisi/dotfiles
+- inspired by https://github.com/thoughtbot/dotfiles
