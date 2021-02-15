@@ -69,19 +69,19 @@ setup_macos() {
 setup_symlinks() {
   title "Creating symlinks"
   cd $HOME
-  ln -s .dotfiles/aliases .aliases
-  ln -s .dotfiles/SpaceVim.d .SpaceVim.d
-  ln -s .dotfiles/p10k.zsh .p10k.zsh
-  ln -s .dotfiles/SpaceVim .SpaceVim
-  ln -s .dotfiles/SpaceVim .vim
-  ln -s .dotfiles/ohmyzsh .oh-my-zsh
+  ln -s .dotfiles/aliases $HOME/.aliases
+  ln -s .dotfiles/SpaceVim.d $HOME/.SpaceVim.d
+  ln -s .dotfiles/p10k.zsh $HOME/.p10k.zsh
+  ln -s .dotfiles/SpaceVim $HOME/.SpaceVim
+  ln -s .dotfiles/SpaceVim $HOME/.vim
+  ln -s .dotfiles/ohmyzsh $HOME/.oh-my-zsh
   if [[ "$(uname -m)" == "x86_64" ]]; then
-    ln -s .dotfiles/zprofile-x86_64 .zprofile
+    ln -s .dotfiles/zprofile-x86_64 $HOME/.zprofile
   else
-    ln -s .dotfiles/zprofile .zprofile
+    ln -s .dotfiles/zprofile $HOME/.zprofile
   fi
-  ln -s .dotfiles/zshrc .zshrc
-  ln -s .dotfiles/zshrc.local .zshrc.local
+  ln -s .dotfiles/zshrc $HOME/.zshrc
+  ln -s .dotfiles/zshrc.local $HOME/.zshrc.local
 
   # some more links
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -89,6 +89,7 @@ setup_symlinks() {
   git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
   ln -s .dotfiles/bin bin
   ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+  ln -s .dotfiles/gitconfig $HOME/.gitconfig
 }
 
 case "$1" in
