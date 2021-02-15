@@ -23,7 +23,7 @@ setup_homebrew() {
     if test ! "$(command -v brew)"; then
         info "Homebrew not installed. Installing."
         # Run as a login shell (non-interactive) so that the script doesn't pause for user input
-        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash --login
+        curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash
     fi
 
     # install brew dependencies from Brewfile
@@ -91,8 +91,25 @@ setup_symlinks() {
   ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
 }
 
-# setup_symlinks
-setup_macos
+case "$1" in
+  macos)
+    setup_macos
+    ;;
+  link)
+    setup_symlinks
+    ;;
+  homebrew)
+    setup_homebrew
+    ;;
+  all)
+    setup_homebrew
+    setup_macos
+    setup_symlinks
+  *)
+    echo -e $"\nUsage: $(basename "$0") {link|homebrew|shell|terminfo|macos|all}\n"
+    exit 1
+    ;;
+esac
 
 echo -e
 success "Done."
