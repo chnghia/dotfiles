@@ -23,4 +23,4 @@ hledger_tree_w() {
 }
 alias hledger-tree='hledger_tree'
 alias hledger-tree-w='hledger_tree_w'
-#alias code='code-insiders'
+alias code='code-insiders'
