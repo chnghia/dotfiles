@@ -1,3 +1,4 @@
 !bin
+Brewfile.lock.json
 vim/bundle/
 .DS_Store
