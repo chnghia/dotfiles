@@ -1,8 +1,31 @@
 alias lla='ls -al'
+
+# for speedtest 
 alias speedtest-sing='speedtest --server 13623'
 alias speedtest-sing-1='speedtest --server 4235'
+
+# for sshuttle
 alias sshuttle-vpn-gw='sshuttle -r vfa-vpn-gw 0/0 -x=192.168.101.0/24 -x=192.168.100.0/24 -x=192.168.1.0/24 -x=192.168.0.0/24'
+
+# Detect which `ls` flavor is in use
+if ls --color > /dev/null 2>&1; then # GNU `ls`
+    colorflag="--color"
+else # macOS `ls`
+    colorflag="-G"
+fi
+
+alias l="ls -lah ${colorflag}"
+alias la="ls -AF ${colorflag}"
+alias ll="ls -lFh ${colorflag}"
+alias lld="ls -l | grep ^d"
 alias rmd='rm -rf'
+
+# Helpers
+alias grep='grep --color=auto'
+alias df='df -h' # disk free, in Gigabytes, not bytes
+alias du='du -h -c' # calculate disk usage for a folder
+
+# hledger
 hledger_tree() {
   if [ "$1" != "" ]
   then
@@ -21,6 +44,13 @@ hledger_tree_w() {
     hledger balance -W date:$DATE/01- --tree --depth 2
   fi
 }
+
+# hledger
 alias hledger-tree='hledger_tree'
 alias hledger-tree-w='hledger_tree_w'
+
+# for vscode
 #alias code='code-insiders'
+
+# Recursively delete `.DS_Store` files
+alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
