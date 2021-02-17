@@ -58,4 +58,3 @@ alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
 # vpn
 alias vpn="vpnConnection.sh"
 alias vpn-connect-acons='vpn connect "VPN acons"'
->>>>>>> origin/main
