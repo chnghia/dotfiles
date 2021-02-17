@@ -45,7 +45,8 @@ setup_macos() {
         defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
         echo "Enable subpixel font rendering on non-Apple LCDs"
-        defaults write NSGlobalDomain AppleFontSmoothing -int 2
+        #defaults write NSGlobalDomain AppleFontSmoothing -int 2
+        defaults write CGFontRenderingFontSmoothingDisabled -bool FALSE
 
         echo "Use current directory as default search scope in Finder"
         defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
@@ -87,8 +88,10 @@ setup_symlinks() {
   git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
   git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
   git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-  ln -s .dotfiles/bin bin
-  ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+  git clone --depth=1 https://github.com/Aloxaf/fzf-tab ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fzf-tab
+
+  ln -s .dotfiles/bin $HOME/bin
+  ln -s "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" $HOME/bin/subl
   ln -s .dotfiles/gitconfig $HOME/.gitconfig
 }
 
@@ -106,6 +109,7 @@ case "$1" in
     setup_homebrew
     setup_macos
     setup_symlinks
+    ;;
   *)
     echo -e $"\nUsage: $(basename "$0") {link|homebrew|shell|terminfo|macos|all}\n"
     exit 1
