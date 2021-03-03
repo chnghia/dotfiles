@@ -27,21 +27,31 @@ alias du='du -h -c' # calculate disk usage for a folder
 
 # hledger
 hledger_tree() {
-  if [ "$1" != "" ]
+  if [ "$2" != "" ]
   then
-    hledger balance -M date:$1- --tree --depth 2
+    hledger balance -M date:$1-$2 --tree --depth 2
   else
-    DATE=$(date +%Y)
-    hledger balance -M date:$DATE/01- --tree --depth 2
+    if [ "$1" != "" ]
+    then
+      hledger balance -M date:$1- --tree --depth 2
+    else
+      DATE=$(date +%Y)
+      hledger balance -M date:$DATE/01- --tree --depth 2
+    fi
   fi
 }
 hledger_tree_w() {
-  if [ "$1" != "" ]
+  if [ "$2" != "" ]
   then
     hledger balance -W date:$1- --tree --depth 2
   else
-    DATE=$(date +%Y/%m)
-    hledger balance -W date:$DATE/01- --tree --depth 2
+    if [ "$1" != "" ]
+    then
+      hledger balance -W date:$1- --tree --depth 2
+    else
+      DATE=$(date +%Y/%m)
+      hledger balance -W date:$DATE/01- --tree --depth 2
+    fi
   fi
 }
 
@@ -58,3 +68,11 @@ alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
 # vpn
 alias vpn="vpnConnection.sh"
 alias vpn-connect-acons='vpn connect "VPN acons"'
+alias vpn-status-acons='vpn status "VPN acons"'
+
+# flutter
+alias ios-silumator='open -a Simulator'
+alias flutter='arch -x86_64 flutter'
+alias pod='arch -x86_64 pod'
+alias gem='arch -x86_64 gem'
+alias flutter-run='flutter run | grep -v "Error retrieving thread information"'
