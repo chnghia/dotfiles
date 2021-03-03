@@ -45,8 +45,8 @@ setup_macos() {
         defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
         echo "Enable subpixel font rendering on non-Apple LCDs"
-        #defaults write NSGlobalDomain AppleFontSmoothing -int 2
-        defaults write CGFontRenderingFontSmoothingDisabled -bool FALSE
+        defaults write NSGlobalDomain AppleFontSmoothing -int 2
+        #defaults write CGFontRenderingFontSmoothingDisabled -bool FALSE
 
         echo "Use current directory as default search scope in Finder"
         defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"

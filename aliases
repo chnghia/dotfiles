@@ -27,21 +27,31 @@ alias du='du -h -c' # calculate disk usage for a folder
 
 # hledger
 hledger_tree() {
-  if [ "$1" != "" ]
+  if [ "$2" != "" ]
   then
-    hledger balance -M date:$1- --tree --depth 2
+    hledger balance -M date:$1-$2 --tree --depth 2
   else
-    DATE=$(date +%Y)
-    hledger balance -M date:$DATE/01- --tree --depth 2
+    if [ "$1" != "" ]
+    then
+      hledger balance -M date:$1- --tree --depth 2
+    else
+      DATE=$(date +%Y)
+      hledger balance -M date:$DATE/01- --tree --depth 2
+    fi
   fi
 }
 hledger_tree_w() {
-  if [ "$1" != "" ]
+  if [ "$2" != "" ]
   then
-    hledger balance -W date:$1- --tree --depth 2
+    hledger balance -W date:$1-$2 --tree --depth 2
   else
-    DATE=$(date +%Y/%m)
-    hledger balance -W date:$DATE/01- --tree --depth 2
+    if [ "$1" != "" ]
+    then
+      hledger balance -W date:$1- --tree --depth 2
+    else
+      DATE=$(date +%Y/%m)
+      hledger balance -W date:$DATE/01- --tree --depth 2
+    fi
   fi
 }
 
