@@ -60,7 +60,7 @@ alias hledger-tree='hledger_tree'
 alias hledger-tree-w='hledger_tree_w'
 
 # for vscode
-alias code='code-insiders'
+#alias code='code-insiders'
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
