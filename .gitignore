@@ -2,3 +2,4 @@
 Brewfile.lock.json
 vim/bundle/
 .DS_Store
+SpaceVim.d/.netrwhist

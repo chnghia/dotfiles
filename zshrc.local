@@ -1,2 +1,3 @@
-export PATH="$PATH:$HOME/development/flutter/bin"
+export ANDROID_SDK_ROOT="$HOME/development/Android/sdk/"
+export PATH="$PATH:$HOME/development/flutter/bin:$HOMEBREW_HOME/opt/openjdk@11/bin"
 
