@@ -25,6 +25,11 @@ alias grep='grep --color=auto'
 alias df='df -h' # disk free, in Gigabytes, not bytes
 alias du='du -h -c' # calculate disk usage for a folder
 
+# disk mount
+alias disk-macdata='diskutil list | grep MacData'
+alias mount-macdata='diskutil mount /dev/disk2s3'
+alias umount-macdata='diskutil unmount /dev/disk2s3'
+
 # hledger
 hledger_tree() {
   if [ "$1" != "" ]
