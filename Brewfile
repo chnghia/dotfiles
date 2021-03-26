@@ -8,4 +8,4 @@ brew "jq"
 brew "tree"
 brew "fd"
 brew "fzf"
-
+brew "unar"
