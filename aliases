@@ -31,6 +31,9 @@ alias mount-macdata='diskutil mount /dev/disk2s3'
 alias umount-macdata='diskutil unmount /dev/disk2s3'
 alias mount-mirouter='open smb://Guest:@mirouter'
 
+# npm alias
+alias npm-ls-g='npm ls -g -depth 0'
+
 # hledger
 hledger_tree() {
   if [ "$2" != "" ]
@@ -70,6 +73,7 @@ alias hledger-tree-w='hledger_tree_w'
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
+alias cleanup-node-modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
 
 # vpn
 alias vpn="vpnConnection.sh"
