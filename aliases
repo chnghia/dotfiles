@@ -26,6 +26,12 @@ alias df='df -h' # disk free, in Gigabytes, not bytes
 alias du='du -h -c' # calculate disk usage for a folder
 alias tree='tree -d -L 2'
 
+# disk mount
+alias disk-macdata='diskutil list | grep MacData'
+alias mount-macdata='diskutil mount /dev/disk4s3'
+alias umount-macdata='diskutil unmount /dev/disk4s3'
+alias mount-mirouter='open smb://Guest:@mirouter'
+
 # hledger
 hledger_tree() {
   if [ "$2" != "" ]
