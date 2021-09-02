@@ -24,7 +24,10 @@ alias rmd='rm -rf'
 alias grep='grep --color=auto'
 alias df='df -h' # disk free, in Gigabytes, not bytes
 alias du='du -h -c' # calculate disk usage for a folder
-alias tree='tree -d -L 2'
+alias tree-folder='tree -d -L 2'
+
+# npm alias
+alias npm-ls-g='npm ls -g -depth 0'
 
 # disk mount
 alias disk-macdata='diskutil list | grep MacData'
@@ -69,13 +72,17 @@ alias hledger-tree-w='hledger_tree_w'
 # for vscode
 #alias code='code-insiders'
 
+# Google DNS
+alias set-dns="sudo networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4 && sudo killall -HUP mDNSResponder"
+
 # Recursively delete `.DS_Store` files
-alias cleanup="find . -name '*.DS_Store' -type f -ls -delete"
+alias cleanup="find . -name '*.DS_Store'  -type f -ls -delete && find . -name '__MACOSX' -type d -prune -exec rm -rf '{}' +"
+alias cleanup-node-modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
 
 # vpn
 alias vpn="vpnConnection.sh"
-alias vpn-connect-acons='vpn connect "VPN acons"'
-alias vpn-status-acons='vpn status "VPN acons"'
+alias vpn-connect-acons='vpn connect "VPN acons 307"'
+alias vpn-status-acons='vpn status "VPN acons 307"'
 
 # flutter
 alias ios-silumator='open -a Simulator'
@@ -83,3 +90,15 @@ alias flutter='arch -x86_64 flutter'
 alias pod='arch -x86_64 pod'
 alias gem='arch -x86_64 gem'
 alias flutter-run='flutter run | grep -v "Error retrieving thread information"'
+
+alias mongo-start='mongod --config /opt/homebrew/etc/mongod.conf --fork'
+
+text_gen() {
+  curl -F 'text=$1' -H 'api-key:73625933-66b6-4233-8898-1b65d2c75a6e' https://api.deepai.org/api/text-generator
+}
+
+web_response() {
+  curl -s -w '\nLookup time:\t%{time_namelookup}\nConnect time:\t%{time_connect}\nAppCon time:\t%{time_appconnect}\nRedirect time:\t%{time_redirect}\nPreXfer time:\t%{time_pretransfer}\nStartXfer time:\t%{time_starttransfer}\n\nTotal time:\t%{time_total}\n' -o /dev/null $1
+}
+
+alias speedtest=/Users/nghia/miniforge3/bin/speedtest

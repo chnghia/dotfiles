@@ -1,5 +1,6 @@
 export ANDROID_SDK_ROOT="$HOME/development/android/sdk"
 #export ANDROID_HOME="$ANDROID_SDK_ROOT/"
 export PATH="$PATH:$HOME/development/flutter/bin"
-export PATH="$HOMEBREW_PREFIX/opt/opencv@3/bin:$HOMEBREW_PREFIX/opt/openjdk@11/bin:$PATH"
+export PATH="$HOMEBREW_PREFIX/opt/opencv@3:$HOMEBREW_PREFIX/opt/opencv@3/bin:$HOMEBREW_PREFIX/opt/openjdk@11/bin:$PATH"
 #!export PATH="$PATH:$HOME/development/cmdline-tools/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/emulator"
+export LD_LIBRARY_PATH=$HOMEBREW_PREFIX/lib
