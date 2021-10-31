@@ -79,3 +79,7 @@ alias cleanup-node-modules="find . -name 'node_modules' -type d -prune -exec rm 
 # vpn
 alias vpn="vpnConnection.sh"
 alias vpn-connect-acons='vpn connect "VPN acons"'
+
+# brew mongo
+alias mongo-start="mongod --config /usr/local/etc/mongod.conf"
+alias speedtest="/Users/nghia/miniforge3/bin/speedtest"
