@@ -5,6 +5,7 @@ alias speedtest-sing='speedtest --server 13623'
 alias speedtest-sing-1='speedtest --server 4235'
 
 # for sshuttle
+alias sshuttle="/Users/nghia/miniforge3/bin/sshuttle"
 alias sshuttle-vpn-gw='sshuttle -r vfa-vpn-gw 0/0 -x=192.168.101.0/24 -x=192.168.100.0/24 -x=192.168.1.0/24 -x=192.168.0.0/24'
 
 # Detect which `ls` flavor is in use
