@@ -1,4 +1,6 @@
+DISABLE_AUTO_UPDATE=true
 export ANDROID_SDK_ROOT="$HOME/development/Android/sdk/"
 export PATH="$PATH:$HOME/development/flutter/bin:$HOMEBREW_HOME/opt/openjdk@11/bin"
 export PATH="$HOMEBREW_HOME/opt/php@7.4/bin:$HOMEBREW_HOME/opt/php@7.4/sbin:$PATH"
+export PATH="$HOMEBREW_HOME/opt/mariadb@10.3/bin:$PATH"
 
