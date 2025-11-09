@@ -1,92 +1,126 @@
 #!/usr/bin/env bash
-# lmchat.sh — minimal terminal chat client for LM Studio (localhost:1234)
+# lmchat.sh — terminal chat client for LM Studio (localhost:1234)
 # Requires: curl, jq
-# Usage: ./lmchat.sh [model] 
-# Example: ./lmchat.sh "lmstudio-community/qwen2.5-7b-instruct"
+# Usage:
+#   ./lmchat.sh [model] [--system system_prompt.txt]
+# Example:
+#   ./lmchat.sh "qwen2.5-7b-instruct" --system system.txt
 
 set -euo pipefail
 
-BASE_URL="${LMSTUDIO_BASE_URL:-http://172.16.0.25:1234/v1}"
-MODEL="${1:-"openai/gpt-oss-20b"}"   # default model (tùy bạn đổi)
-API_KEY="${LMSTUDIO_API_KEY:-}"      # nếu LM Studio yêu cầu api key (optional)
+BASE_URL="http://172.16.0.25:1234/v1/chat/completions"
+MODEL="${1:-"openai/gpt-oss-20b"}"
+SYSTEM_FILE=""
+if [[ "${2:-}" == "--system" ]]; then
+  SYSTEM_FILE="${3:-}"
+fi
 
 TMPDIR=$(mktemp -d)
 HISTORY="$TMPDIR/history.json"
+trap "rm -rf $TMPDIR" EXIT
 
-# init history with an optional system prompt (change if cần)
-jq -n '[]' > "$HISTORY"
-# Uncomment and edit below to add a system prompt by default:
-# jq -n '[{role:"system", content:"You are a helpful assistant."}]' > "$HISTORY"
+# init history
+if [[ -n "$SYSTEM_FILE" && -f "$SYSTEM_FILE" ]]; then
+  SYS_PROMPT=$(<"$SYSTEM_FILE")
+  jq -n --arg sys "$SYS_PROMPT" '[{role:"system", content:$sys}]' > "$HISTORY"
+else
+  jq -n '[]' > "$HISTORY"
+fi
 
-cleanup() {
-  rm -rf "$TMPDIR"
-}
-trap cleanup EXIT
+# Detect non-interactive mode (input piped)
+if [ ! -t 0 ]; then
+  USER_INPUT=$(cat)
+  if [ -z "$USER_INPUT" ]; then
+    echo "No input provided from stdin." >&2
+    exit 1
+  fi
+
+  # append system prompt + user message
+  jq --arg msg "$USER_INPUT" '. + [{role:"user", content:$msg}]' "$HISTORY" > "$TMPDIR/hist2.json" && mv "$TMPDIR/hist2.json" "$HISTORY"
+
+  PAYLOAD=$(jq -n \
+    --arg model "$MODEL" \
+    --argjson messages "$(cat "$HISTORY")" \
+    '{model:$model, messages:$messages, stream:true, temperature:0.7}')
+
+  # Stream output
+  curl -sN -X POST "$BASE_URL" \
+    -H "Content-Type: application/json" \
+    -d "$PAYLOAD" | while IFS= read -r line; do
+      if [[ "$line" == "data: "* ]]; then
+        json="${line#data: }"
+        if [[ "$json" == "[DONE]" ]]; then
+          break
+        fi
+        token=$(echo "$json" | jq -r '.choices[0].delta.content // empty' 2>/dev/null || true)
+        printf "%s" "$token"
+      fi
+    done
+  echo
+  exit 0
+fi
 
 echo "LM Studio terminal chat client"
-echo "Base URL: $BASE_URL"
 echo "Model: $MODEL"
-echo "Type /quit to exit, /clear to clear conversation history."
+[[ -n "$SYSTEM_FILE" ]] && echo "System prompt loaded from: $SYSTEM_FILE"
+echo "-------------------------------------------"
+echo "Type /quit to exit, /clear to clear context."
 echo
 
 while true; do
   printf "\nYou: "
-  if ! IFS= read -r USER_INP; then
-    echo
-    break
-  fi
+  if ! IFS= read -r USER_INPUT; then echo; break; fi
 
-  case "$USER_INP" in
-    "/quit"|"quit" )
+  case "$USER_INPUT" in
+    "/quit"|"quit")
       echo "Goodbye."
       break
       ;;
-    "/clear" )
-      jq -n '[]' > "$HISTORY"
-      echo "Conversation cleared."
+    "/clear")
+      if [[ -n "$SYSTEM_FILE" && -f "$SYSTEM_FILE" ]]; then
+        SYS_PROMPT=$(<"$SYSTEM_FILE")
+        jq -n --arg sys "$SYS_PROMPT" '[{role:"system", content:$sys}]' > "$HISTORY"
+      else
+        jq -n '[]' > "$HISTORY"
+      fi
+      echo "(history cleared)"
       continue
       ;;
-    "" )
-      echo "(empty input — try again)"
+    "")
+      echo "(empty input — skipped)"
       continue
       ;;
   esac
 
-  # append user's message to history
-  jq --arg content "$USER_INP" '. + [{role:"user", content:$content}]' "$HISTORY" > "$TMPDIR/history2.json" && mv "$TMPDIR/history2.json" "$HISTORY"
+  # append user's message
+  jq --arg msg "$USER_INPUT" '. + [{role:"user", content:$msg}]' "$HISTORY" > "$TMPDIR/hist2.json" && mv "$TMPDIR/hist2.json" "$HISTORY"
 
-  # build payload
-  PAYLOAD=$(jq -n --arg model "$MODEL" --argjson messages "$(cat $HISTORY)" \
-    '{model:$model, messages:$messages, temperature:0.7, max_tokens:-1, stream:false}')
+  # build request payload
+  PAYLOAD=$(jq -n \
+    --arg model "$MODEL" \
+    --argjson messages "$(cat "$HISTORY")" \
+    '{model:$model, messages:$messages, stream:true, temperature:0.7}')
 
-  # prepare curl headers
-  AUTH_HEADER=()
-  if [ -n "$API_KEY" ]; then
-    # some setups expect Authorization: Bearer <key> (if LM Studio configured)
-    AUTH_HEADER=(-H "Authorization: Bearer $API_KEY")
-  fi
+  echo -e "\nAssistant:\n"
 
-  # call LM Studio OpenAI-compatible endpoint
-  RESP=$(curl -H "Content-Type: application/json" \
-    -d "$PAYLOAD" "$BASE_URL/chat/completions")
+  # call LM Studio with streaming output
+  curl -sN -X POST "$BASE_URL" \
+    -H "Content-Type: application/json" \
+    -d "$PAYLOAD" | while IFS= read -r line; do
+      # SSE stream: lines start with 'data: {...}'
+      if [[ "$line" == "data: "* ]]; then
+        json="${line#data: }"
+        if [[ "$json" == "[DONE]" ]]; then
+          break
+        fi
+        token=$(echo "$json" | jq -r '.choices[0].delta.content // empty' 2>/dev/null || true)
+        printf "%s" "$token"
+        ASSISTANT_OUTPUT+="$token"
+      fi
+    done
+  echo
 
-  # Try to extract assistant text — handle both OpenAI-style and LM Studio v0 api variations
-  # OpenAI-compatible: .choices[0].message.content
-  # v0/chat/completions: .choices[0].message.content also common
-  ASSISTANT_TEXT=$(echo "$RESP" | jq -r '.choices[0].message.content // .choices[0].text // ""' 2>/dev/null || true)
-
-  if [ -z "$ASSISTANT_TEXT" ]; then
-    echo "No assistant text found. Raw response:"
-    echo "$RESP" | sed 's/^/  /'
-    # optionally append a placeholder assistant message to history so context keeps going
-    jq --arg content "((no assistant reply — raw response printed))" '. + [{role:"assistant", content:$content}]' "$HISTORY" > "$TMPDIR/history2.json" && mv "$TMPDIR/history2.json" "$HISTORY"
-    continue
-  fi
-
-  # print assistant output nicely
-  echo -e "\nAssistant:\n$ASSISTANT_TEXT"
-
-  # append assistant to history
-  jq --arg content "$ASSISTANT_TEXT" '. + [{role:"assistant", content:$content}]' "$HISTORY" > "$TMPDIR/history2.json" && mv "$TMPDIR/history2.json" "$HISTORY"
+  # append assistant reply to history
+  jq --arg msg "${ASSISTANT_OUTPUT:-}" '. + [{role:"assistant", content:$msg}]' "$HISTORY" > "$TMPDIR/hist2.json" && mv "$TMPDIR/hist2.json" "$HISTORY"
+  unset ASSISTANT_OUTPUT
 done
-
