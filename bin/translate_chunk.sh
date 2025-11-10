@@ -15,7 +15,7 @@ LOG_FILE="./translation.log"
 LM_STUDIO_URL="http://172.16.0.25:1234/v1/chat/completions"
 # MỚI: Định nghĩa kích thước chunk (số dòng)
 # THAY ĐỔI: Giảm CHUNK_SIZE để tránh lỗi "full context" cho 1 chunk
-CHUNK_SIZE=200
+CHUNK_SIZE=100
 
 # Định nghĩa các phần của prompt
 SYSTEM_PROMPT="You are an expert software developer and a professional translator. Your task is to translate the provided code into English. This includes all comments, documentation, and variable/function names (identifiers) if they are in a non-English language. The translated code should be fully functional, follow standard English coding conventions (e.g., snake_case for variables if the original used it, but with English words), and maintain the original logic and structure."
@@ -93,7 +93,7 @@ translate_file() {
       jq -n \
         --arg content_to_translate "$full_prompt" \
         '{
-          "model": "qwen3",
+          "model": "qwen/qwen3-coder-30b",
           "messages": [ { "role": "user", "content": $content_to_translate } ],
           "temperature": 0.1,
           "max_tokens": 131000,
