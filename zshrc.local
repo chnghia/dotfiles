@@ -237,7 +237,7 @@ Memo tổng hợp: \"$MEMO\""
     # 1. Lấy tên model bạn đã load trong LM Studio
     #    (Ví dụ: "lmstudio-community/Meta-Llama-3-8B-Instruct-GGUF")
     #    !! BẠN PHẢI THAY THẾ GIÁ TRỊ NÀY !!
-    local LOCAL_MODEL_NAME="openai/gpt-oss-120b" # "qwen/qwen3-32b" #"unsloth/deepseek-r1-distill-qwen-32b"
+    local LOCAL_MODEL_NAME="qwen/qwen3-coder-30b" # "qwen/qwen3-32b" #"unsloth/deepseek-r1-distill-qwen-32b"
 
     # 2. Xây dựng payload JSON
     #    Chúng ta dùng 'jq' để build JSON một cách an toàn,
